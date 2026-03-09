@@ -1,0 +1,43 @@
+# Autolab Policy Constraints Configuration
+
+planner:
+  allow_code_patching: false
+  max_new_experiments_per_cycle: 3
+  max_hypotheses_per_cycle: 2
+
+executor:
+  max_concurrent_jobs: 2
+  retry_transient_failures: true
+  stall_timeout_minutes: 30
+
+patching:
+  allowed_config_paths:
+    - "train.lr"
+    - "train.batch_size"
+    - "train.weight_decay"
+    - "train.momentum"
+    - "train.optimizer"
+    - "model.dropout"
+    - "model.sparsity_lambda"
+    - "model.attention_heads"
+    - "data.augmentation"
+    - "data.shuffle"
+  allowed_code_files:
+    - "models/attention.py"
+    - "models/transformer.py"
+    - "losses/custom_loss.py"
+    - "training/trainer.py"
+  require_git_snapshot: true
+  validate_syntax: true
+
+safety:
+  protected_paths:
+    - ".git"
+    - "secrets/"
+    - "ssh_keys/"
+    - "autolab/configs/"
+  duplicate_experiment_check: true
+  max_experiments_per_family: 100
+  max_queue_size: 1000
+  require_hypothesis: false
+  human_approval_required: false

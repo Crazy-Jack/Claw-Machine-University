@@ -1,0 +1,9 @@
+# Autolab Planner Configuration
+
+integration_mode: "tool"  # or "json"
+max_actions_per_cycle: 5
+max_new_experiments_per_cycle: 3
+max_hypotheses_per_cycle: 2
+context_history_limit: 20
+include_failures: true
+include_metrics: true

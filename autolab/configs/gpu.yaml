@@ -1,0 +1,37 @@
+# Autolab GPU Worker Configuration
+
+default_ssh_key: "~/.ssh/id_ed25519"
+connection_timeout_seconds: 30
+command_timeout_seconds: 300
+heartbeat_interval_seconds: 300.0
+
+workers:
+  - name: a100x1-001
+    host: 34.48.207.147
+    user: clawbot-tian
+    ssh_key: "~/.ssh/id_ed25519"
+    gpus:
+      - id: "0"
+        type: "A100"
+        memory_gb: 40
+    enabled: true
+    is_local: false
+    max_concurrent_jobs: 1
+    current_jobs: 0
+    last_heartbeat: null
+    status: "online"
+
+  - name: a100x1-002
+    host: 136.107.43.189
+    user: clawbot-tian
+    ssh_key: "~/.ssh/id_ed25519"
+    gpus:
+      - id: "0"
+        type: "A100-SXM4-80GB"
+        memory_gb: 80
+    enabled: true
+    is_local: false
+    max_concurrent_jobs: 1
+    current_jobs: 0
+    last_heartbeat: null
+    status: "online"

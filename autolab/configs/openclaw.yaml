@@ -1,0 +1,12 @@
+# Autolab OpenClaw Integration Configuration
+
+# Anthropic API key (or set ANTHROPIC_API_KEY environment variable)
+anthropic_api_key: null
+
+model: "claude-sonnet-4-20250514"
+max_tokens: 4096
+temperature: 0.7
+
+skills_path: "autolab/openclaw/skills"
+workspace_path: "autolab/openclaw_workspace"
+enable_multi_agent: true

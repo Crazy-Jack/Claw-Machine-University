@@ -1,0 +1,83 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Workspace data (keep structure, ignore data)
+workspace/queue/*.json
+workspace/running/*.json
+workspace/completed/*.json
+workspace/failed/*.json
+workspace/state/*.json
+workspace/artifacts/*
+workspace/logs/*
+workspace/patches/*
+workspace/reports/*
+workspace/planner_raw/*
+
+# Keep directories
+!workspace/queue/.gitkeep
+!workspace/running/.gitkeep
+!workspace/completed/.gitkeep
+!workspace/failed/.gitkeep
+!workspace/state/.gitkeep
+!workspace/artifacts/.gitkeep
+!workspace/logs/.gitkeep
+!workspace/patches/.gitkeep
+!workspace/reports/.gitkeep
+!workspace/planner_raw/.gitkeep

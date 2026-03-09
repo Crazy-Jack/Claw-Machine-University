@@ -1,0 +1,9 @@
+# Autolab Executor Configuration
+
+max_concurrent_jobs: 2
+retry_transient_failures: true
+stall_timeout_minutes: 30
+log_poll_interval_seconds: 10.0
+enable_local_fallback: true
+max_retries_per_job: 3
+kill_on_stall: true

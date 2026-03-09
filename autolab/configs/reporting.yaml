@@ -1,0 +1,8 @@
+# Autolab Reporting Configuration
+
+reports_dir: "workspace/reports"
+cycle_report_interval: 10
+include_plots: false
+markdown_template: "default"
+json_export: true
+retention_days: 30

@@ -1,0 +1,8 @@
+# Autolab System Configuration
+
+workspace_path: "./autolab_workspace"
+loop_interval_seconds: 60.0
+log_level: "INFO"
+enable_heartbeat: true
+heartbeat_path: "workspace/state/heartbeat.txt"
+max_state_history: 1000
