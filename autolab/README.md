@@ -40,6 +40,45 @@ cd autolab
 pip install -e .
 ```
 
+### Choosing an AI Provider
+
+Autolab supports two AI providers for autonomous planning:
+
+**1. OpenClaw (Anthropic Claude)** - Default
+- Powerful reasoning with Claude models
+- Requires Anthropic API key
+- Configured in `configs/openclaw.yaml`
+
+**2. Zai GLM-4.7** - Alternative
+- High-performance Chinese model
+- Requires Zai API key
+- Configured in `configs/openclaw.yaml`
+
+To switch providers, edit `configs/openclaw.yaml`:
+
+```yaml
+# Choose provider: "anthropic" or "zai"
+provider: "anthropic"  # or "zai"
+
+# Anthropic settings
+anthropic_api_key: "your_anthropic_key"
+anthropic_model: "claude-sonnet-4-20250514"
+
+# Zai settings
+zai_api_key: "your_zai_key"
+zai_model: "glm-4.7"
+zai_base_url: "https://open.bigmodel.cn/api/paas/v4/"
+```
+
+Or set environment variables:
+```bash
+# For Anthropic (Claude)
+export ANTHROPIC_API_KEY="your_anthropic_key"
+
+# For Zai (GLM-4.7)
+export ZAI_API_KEY="your_zai_key"
+```
+
 ### Configuration
 
 1. Edit `configs/gpu.yaml` to add your SSH GPU workers
@@ -100,7 +139,96 @@ autolab/
 └── openclaw/        # Skill wrappers and agent configs
 ```
 
-## OpenClaw Integration
+## AI Provider Integration
+
+Autolab supports two AI providers for autonomous planning: **OpenClaw (Anthropic Claude)** and **Zai GLM-4.7**.
+
+### Using GLM-4.7 (Zai)
+
+GLM-4.7 is a high-performance model from Zhipu AI that excels at research planning and reasoning.
+
+#### Setup GLM-4.7
+
+**1. Get API Key:**
+- Visit [Zhipu AI Platform](https://open.bigmodel.cn/)
+- Create an account and obtain your API key
+
+**2. Configure Provider:**
+
+```bash
+# Set environment variable (recommended)
+export ZAI_API_KEY="your_zai_api_key_here"
+
+# Or edit configs/openclaw.yaml
+nano configs/openclaw.yaml
+```
+
+**3. Update Config File:**
+
+```yaml
+# Choose provider
+provider: "zai"
+
+# Zai (GLM-4.7) Configuration
+zai_api_key: "your_zai_api_key"  # Or use ZAI_API_KEY env var
+zai_model: "glm-4.7"
+zai_base_url: "https://open.bigmodel.cn/api/paas/v4/"
+```
+
+**4. Install Dependencies:**
+
+```bash
+# Zai SDK is included in dependencies
+pip install -e .
+```
+
+**5. Test Connection:**
+
+```python
+from zai import ZaiClient
+
+client = ZaiClient(api_key="your_zai_api_key")
+response = client.chat.completions.create(
+    model="glm-4.7",
+    messages=[{"role": "user", "content": "Hello!"}]
+)
+print(response.choices[0].message.content)
+```
+
+#### GLM-4.7 Advantages
+
+- **Strong reasoning**: Excellent at complex planning tasks
+- **Cost-effective**: Competitive pricing vs other providers
+- **Fast inference**: Low latency for rapid iteration
+- **Chinese support**: Native Chinese language understanding
+
+#### Switching Between Providers
+
+You can switch between Anthropic and Zai at any time:
+
+```bash
+# Switch to GLM-4.7
+# Edit configs/openclaw.yaml
+provider: "zai"
+
+# Set API key
+export ZAI_API_KEY="your_zai_key"
+
+# Run controller
+python -m autolab.controller.main --verbose
+
+# Switch back to Claude
+# Edit configs/openclaw.yaml
+provider: "anthropic"
+
+# Set API key
+export ANTHROPIC_API_KEY="your_anthropic_key"
+
+# Run controller
+python -m autolab.controller.main --verbose
+```
+
+### OpenClaw Integration
 
 Autolab provides a complete set of OpenClaw skill wrappers that enable autonomous ML research planning and execution.
 
@@ -155,20 +283,26 @@ Autolab includes 4 specialized OpenClaw agent configurations:
    - Purpose: Applies code patches with strict safety constraints
    - Security: No import changes, no exec/eval, no shell commands
 
-### Setting Up OpenClaw Integration
+### Setting Up AI Integration
 
-#### 1. Configure OpenClaw API
+#### 1. Choose Your Provider and Configure API
 
 Edit `configs/openclaw.yaml`:
 
 ```yaml
-api_key: your_anthropic_api_key_here
-model: claude-3-5-sonnet-20241022  # or claude-3-opus-20240229
-max_retries: 3
-timeout_seconds: 120
+# For Anthropic (Claude)
+provider: "anthropic"
+anthropic_api_key: your_anthropic_api_key_here  # or set ANTHROPIC_API_KEY env var
+anthropic_model: "claude-3-5-sonnet-20241022"
+
+# For Zai (GLM-4.7)
+provider: "zai"
+zai_api_key: your_zai_api_key_here  # or set ZAI_API_KEY env var
+zai_model: "glm-4.7"
+zai_base_url: "https://open.bigmodel.cn/api/paas/v4/"
 ```
 
-#### 2. Register Autolab Skills with OpenClaw
+#### 2. Register Autolab Skills
 
 The Autolab controller automatically registers all skills when it starts. Skills are located in:
 
@@ -183,7 +317,7 @@ autolab/openclaw/skills/
 
 Each skill implements:
 - `execute(args: dict) -> dict`: Main execution function
-- `get_spec() -> dict`: Returns skill specification for OpenClaw
+- `get_spec() -> dict`: Returns skill specification
 
 #### 3. Choose Integration Mode
 

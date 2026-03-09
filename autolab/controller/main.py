@@ -35,7 +35,7 @@ def main() -> int:
     parser.add_argument(
         "--api-key",
         default=None,
-        help="Anthropic API key for OpenClaw (or set ANTHROPIC_API_KEY env var)",
+        help="API key for AI provider (or set ANTHROPIC_API_KEY or ZAI_API_KEY env var)",
     )
     parser.add_argument(
         "--dry-run",
@@ -58,11 +58,16 @@ def main() -> int:
     # Get API key from environment if not provided
     import os
 
-    api_key = args.api_key or os.environ.get("ANTHROPIC_API_KEY")
+    api_key = args.api_key or os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ZAI_API_KEY")
 
     if not api_key:
-        print("Warning: No API key provided. OpenClaw integration will be disabled.")
-        print("Set ANTHROPIC_API_KEY environment variable or use --api-key flag.")
+        print("Warning: No API key provided. AI integration will be disabled.")
+        print("Set ANTHROPIC_API_KEY (for Claude) or ZAI_API_KEY (for GLM-4.7) environment variable.")
+        print("Or set api_key in configs/openclaw.yaml")
+        print("You can also use --api-key flag as override.")
+    else:
+        provider = os.environ.get("ANTHROPIC_API_KEY", "zai") if os.environ.get("ZAI_API_KEY") else "anthropic"
+        print(f"Using API key from environment (provider: {provider if api_key == os.environ.get('ZAI_API_KEY') else 'anthropic'})")
 
     # Import after argparse to avoid slow imports if --help is used
     from autolab.controller.loop import MainLoop

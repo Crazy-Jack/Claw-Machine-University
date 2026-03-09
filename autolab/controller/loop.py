@@ -14,6 +14,7 @@ from autolab.executor.job_runner import JobRunner
 from autolab.executor.worker_registry import WorkerRegistry
 from autolab.planner.context_builder import ContextBuilder, PlannerContext
 from autolab.planner.openclaw_bridge import OpenClawBridge
+from autolab.planner.glm_bridge import GLMBridge
 from autolab.schemas.action import PlannerAction
 from autolab.schemas.experiment import Experiment
 from autolab.schemas.result import Result
@@ -40,7 +41,7 @@ class MainLoop:
             workspace_path: Path to workspace.
             config_path: Path to config directory.
             loop_interval_seconds: Interval between loop cycles.
-            api_key: Anthropic API key for OpenClaw.
+            api_key: API key for AI provider (deprecated, use config file).
         """
         self.workspace_path = workspace_path
         self.loop_interval = loop_interval_seconds
@@ -60,10 +61,10 @@ class MainLoop:
 
         # Initialize planner
         self.context_builder = ContextBuilder(workspace_path)
-        self.openclaw_bridge = OpenClawBridge(
-            api_key=api_key,
-            workspace_path=workspace_path,
-        )
+
+        # Load AI provider config and create appropriate bridge
+        self.planner_config = self._load_planner_config(config_path)
+        self.openclaw_bridge = self._create_bridge(api_key)
 
         # Initialize controller components
         self.policy_manager = PolicyManager(f"{config_path}/policies.yaml")
@@ -77,6 +78,52 @@ class MainLoop:
         self.cycle_count = 0
         self.experiments_created_this_cycle = 0
         self.hypotheses_created_this_cycle = 0
+
+    def _load_planner_config(self, config_path: str) -> dict[str, Any]:
+        """Load planner configuration from file.
+
+        Args:
+            config_path: Path to config directory.
+
+        Returns:
+            Configuration dictionary.
+        """
+        import yaml
+
+        config_file = f"{config_path}/openclaw.yaml"
+        try:
+            with open(config_file) as f:
+                return yaml.safe_load(f)
+        except FileNotFoundError:
+            print(f"Warning: Config file {config_file} not found, using defaults")
+            return {"provider": "anthropic"}
+
+    def _create_bridge(self, api_key: str | None = None):
+        """Create appropriate AI bridge based on config.
+
+        Args:
+            api_key: Optional API key override.
+
+        Returns:
+            AI bridge instance (OpenClawBridge or GLMBridge).
+        """
+        provider = self.planner_config.get("provider", "anthropic")
+
+        if provider == "zai":
+            # Create GLM-4.7 bridge
+            return GLMBridge(
+                api_key=api_key or self.planner_config.get("zai_api_key"),
+                model=self.planner_config.get("zai_model", "glm-4.7"),
+                base_url=self.planner_config.get("zai_base_url", "https://open.bigmodel.cn/api/paas/v4/"),
+                workspace_path=self.workspace_path,
+            )
+        else:
+            # Default to Anthropic (OpenClaw)
+            return OpenClawBridge(
+                api_key=api_key or self.planner_config.get("anthropic_api_key"),
+                model=self.planner_config.get("anthropic_model", "claude-sonnet-4-20250514"),
+                workspace_path=self.workspace_path,
+            )
 
     def run(self) -> None:
         """Run the main loop."""

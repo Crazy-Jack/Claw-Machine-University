@@ -1,9 +1,19 @@
-# Autolab OpenClaw Integration Configuration
+# Autolab AI Provider Configuration
+# Supports: anthropic (Claude) or zai (GLM-4.7)
 
-# Anthropic API key (or set ANTHROPIC_API_KEY environment variable)
-anthropic_api_key: null
+# Provider selection: "anthropic" or "zai"
+provider: "anthropic"
 
-model: "claude-sonnet-4-20250514"
+# Anthropic (OpenClaw) Configuration
+anthropic_api_key: null  # Or set ANTHROPIC_API_KEY environment variable
+anthropic_model: "claude-sonnet-4-20250514"
+
+# Zai (GLM-4.7) Configuration
+zai_api_key: null  # Or set ZAI_API_KEY environment variable
+zai_model: "glm-4.7"
+zai_base_url: "https://open.bigmodel.cn/api/paas/v4/"  # Use https://api.z.ai/api/paas/v4/ for overseas
+
+# Common Settings
 max_tokens: 4096
 temperature: 0.7
 
