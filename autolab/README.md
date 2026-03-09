@@ -121,6 +121,69 @@ python -m autolab.tools.list_failures
 python -m autolab.tools.generate_cycle_report
 ```
 
+## Creating Custom Skills
+
+Autolab makes it easy to extend functionality with custom OpenClaw skills. Skills are Python functions that the AI agent can call.
+
+### Quick Start (10 minutes)
+
+Create your first skill in minutes with the quickstart guide:
+
+```bash
+# Learn by doing
+cat SKILLS_QUICKSTART.md
+```
+
+Or follow these steps:
+
+1. **Create skill directory:**
+   ```bash
+   mkdir -p autolab/openclaw/skills/autolab_my_skill
+   cd autolab/openclaw/skills/autolab_my_skill
+   touch __init__.py skill.py
+   ```
+
+2. **Implement skill.py:**
+   ```python
+   def execute(args: dict) -> dict:
+       """Execute the skill."""
+       # Your logic here
+       return {"success": True, "result": ...}
+
+   def get_spec() -> dict:
+       """Get skill specification."""
+       return {
+           "name": "autolab_my_skill",
+           "description": "What this skill does",
+           "parameters": {...}
+       }
+   ```
+
+3. **Done!** No registration needed - skills are auto-discovered.
+
+### Complete Tutorial
+
+For comprehensive coverage including:
+- Skill structure and types
+- Advanced patterns (API integration, async)
+- Best practices and testing
+- Agent integration
+- Real-world examples
+
+See: [OPENCLAW_SKILLS_TUTORIAL.md](OPENCLAW_SKILLS_TUTORIAL.md)
+
+### Example Skills
+
+Autolab includes 13 built-in skills:
+- `autolab_get_goal` - Read research objectives
+- `autolab_get_history` - Inspect experiment history
+- `autolab_create_experiment` - Queue new experiments
+- `autolab_patch_config` - Modify configuration safely
+- `autolab_compare_experiments` - Compare experiment results
+- ... and 8 more
+
+Explore them in `autolab/openclaw/skills/`
+
 ## Directory Structure
 
 ```
